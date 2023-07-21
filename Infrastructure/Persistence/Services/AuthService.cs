@@ -74,5 +74,29 @@ namespace Persistence.Services
             }
             return new SuccessDataResult<Customer>(customerCheck,"Giriş Başarılı");
         }
+
+        public IResult Update(UserDto user)
+        {
+            var changeuser = _userDal.Get(p=> p.Id == user.Id);
+            var result = HashingHelper.VerifyPasswordHash(user.Password, changeuser.PasswordHash, changeuser.PasswordSalt);
+            if (result)
+            {
+                if (user.NewPassword != "")
+                {
+                    byte[] passwordHash, paswordSalt;
+                    HashingHelper.CreatePasswordHash(user.NewPassword, out passwordHash, out paswordSalt);
+                    changeuser.PasswordHash = passwordHash;
+                    changeuser.PasswordSalt = paswordSalt;
+                }
+
+                changeuser.Name = user.Name;
+                _userDal.Update(changeuser);
+                return new SuccessResult("Profiliniz Güncellendi");
+            }
+            else
+            {
+                return new ErrorResult("Şifreniz mevcut şifreniz ile tutmuyor");
+            }
+        }
     }
 }

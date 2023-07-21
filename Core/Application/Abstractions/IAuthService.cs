@@ -11,5 +11,6 @@ namespace Application.Abstractions
         public IDataResult<User> Register(RegisterDto register);
         public IDataResult<User> Login(LoginDto login);
         public IDataResult<Customer> LoginCustomer(LoginDto loginCustomer);
+        public IResult Update(UserDto user);
     }
 }

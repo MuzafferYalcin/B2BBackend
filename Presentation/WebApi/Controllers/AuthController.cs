@@ -34,12 +34,23 @@ namespace WebApi.Controllers
             return Ok(token);
         }
         [HttpPost("loginCustomer")]
-        public IActionResult LoginCustomer(LoginDto loginCustomer) {
+        public IActionResult LoginCustomer(LoginDto loginCustomer)
+        {
             var result = _authService.LoginCustomer(loginCustomer);
-            if(!result.Success)
+            if (!result.Success)
                 return BadRequest(result.Message);
             return Ok(result);
         }
-      
+
+        [HttpPost("updateUser")]
+        public IActionResult Update(UserDto user)
+        {
+            var result = _authService.Update(user);
+            if(!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
+            return Ok(result);
+        }
     }
 }
