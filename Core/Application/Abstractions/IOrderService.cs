@@ -11,7 +11,7 @@ namespace Application.Abstractions
         public IResult Update(Order order);
         public IResult Delete(Order order);
         public IDataResult<List<OrderDto>> GetAll();
-        public IDataResult<List<Order>> GetByCustomerId(int customerId);
+        public IDataResult<List<OrderDto>> GetListByCustomerId(int customerId);
         public IDataResult<OrderDto> GetByIdDto(int id);
 
     }

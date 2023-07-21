@@ -7,6 +7,7 @@ namespace Application.Repositories
     {
         public List<OrderDto> GetOrderListDto();
         public OrderDto GetOrderDto(int id);
+        public List<OrderDto> GetListByCustomer(int customerid);
         public string GetOrderNumber();
     }
 }

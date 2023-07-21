@@ -41,7 +41,7 @@ namespace Persistence.Services
         public IResult Delete(int id)
         {
             var customer = _customerDal.Get(p => p.Id == id);
-            var orders = _orderService.GetByCustomerId(customer.Id).Data;
+            var orders = _orderService.GetListByCustomerId(customer.Id).Data;
             foreach (var order in orders)
             {
                 _orderService.Delete(order);

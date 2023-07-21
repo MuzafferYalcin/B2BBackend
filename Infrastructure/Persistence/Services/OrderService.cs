@@ -18,6 +18,8 @@ namespace Persistence.Services
             _orderDal = orderDal;
             _orderItemService = orderItemService;
         }
+        
+        
         public IDataResult<Order> GetById(int id)
         {
             return new SuccessDataResult<Order>(_orderDal.Get(p => p.Id == id));
@@ -32,7 +34,7 @@ namespace Persistence.Services
                 CustomerId = customerId,
                 Date = DateTime.Now,
                 OrderNumber = newOrderNumber,
-                State = "Alındı"
+                State = "Onay Bekliyor"
             };
             _orderDal.Add(order);
             foreach (var basket in baskets.Data)
@@ -67,9 +69,9 @@ namespace Persistence.Services
             return new SuccessDataResult<List<OrderDto>>(_orderDal.GetOrderListDto());
         }
 
-        public IDataResult<List<Order>> GetByCustomerId(int customerId)
+        public IDataResult<List<OrderDto>> GetListByCustomerId(int customerId)
         {
-            return new SuccessDataResult<List<Order>>(_orderDal.GetList(p => p.CustomerId == customerId));
+            return new SuccessDataResult<List<OrderDto>>(_orderDal.GetListByCustomer(customerId));
         }
 
         public IResult Update(Order order)

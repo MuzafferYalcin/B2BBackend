@@ -26,10 +26,10 @@ namespace WebApi.Controllers
             return BadRequest(result.Message);
         }
 
-        [HttpGet("getByCustomerId/{customerid}")]
+        [HttpGet("getListByCustomerId/{customerid}")]
         public IActionResult GetByCustomerId(int customerid)
         {
-            var result = _orderService.GetByCustomerId(customerid);
+            var result = _orderService.GetListByCustomerId(customerid);
             if (result.Success)
                 return Ok(result);
 

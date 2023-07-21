@@ -14,27 +14,7 @@ namespace Persistence.Repositories
         {
             using (var context = new ContextDb())
             {
-                var orders = (from order in context.Orders
-                             join customer in context.Customers on order.CustomerId equals customer.Id
-                             select new OrderDto
-                             {
-                                 Id = order.Id,
-                                 CustomerId = customer.Id,
-                                 CustomerName = customer.Name,
-                                 Date = order.Date,
-                                 OrderNumber = order.OrderNumber,
-                                 State = order.State,
-                                 TotalPrice = context.OrderItems.Distinct().Where(p=> p.OrderId == order.Id).Sum(p=> p.Quantity *  p.Price)
-                             });
-                return orders.OrderByDescending(p=>p.Date).ToList();
-            }
-        }
-
-        public OrderDto GetOrderDto(int id)
-        {
-            using (var context = new ContextDb())
-            {
-                var orders = from order in context.Orders.Where(p=> p.Id == id)
+                var orders = from order in context.Orders
                               join customer in context.Customers on order.CustomerId equals customer.Id
                               select new OrderDto
                               {
@@ -46,6 +26,26 @@ namespace Persistence.Repositories
                                   State = order.State,
                                   TotalPrice = context.OrderItems.Distinct().Where(p => p.OrderId == order.Id).Sum(p => p.Quantity * p.Price)
                               };
+                return orders.OrderByDescending(p => p.Date).ToList();
+            }
+        }
+
+        public OrderDto GetOrderDto(int id)
+        {
+            using (var context = new ContextDb())
+            {
+                var orders = from order in context.Orders.Where(p => p.Id == id)
+                             join customer in context.Customers on order.CustomerId equals customer.Id
+                             select new OrderDto
+                             {
+                                 Id = order.Id,
+                                 CustomerId = customer.Id,
+                                 CustomerName = customer.Name,
+                                 Date = order.Date,
+                                 OrderNumber = order.OrderNumber,
+                                 State = order.State,
+                                 TotalPrice = context.OrderItems.Distinct().Where(p => p.OrderId == order.Id).Sum(p => p.Quantity * p.Price)
+                             };
                 return orders.FirstOrDefault();
             }
         }
@@ -74,6 +74,25 @@ namespace Persistence.Repositories
 
                 newOrderNumber = "SP" + newOrderNumber;
                 return newOrderNumber;
+            }
+        }
+
+        public List<OrderDto> GetListByCustomer(int customerid)
+        {
+            using (var context = new ContextDb())
+            {
+                var result = from order in context.Orders.Where(p => p.CustomerId == customerid)
+                             select new OrderDto
+                             {
+                                 Id = order.Id,
+                                 CustomerId = customerid,
+                                 OrderNumber = order.OrderNumber,
+                                 CustomerName = context.Customers.Where(p => p.Id == customerid).Select(p =>        p.Name).FirstOrDefault(),
+                                 Date = order.Date,
+                                 State = order.State,
+                                 TotalPrice = context.OrderItems.Distinct().Where(p => p.OrderId ==                  order.Id).Sum(p => p.Quantity * p.Price)
+                             };
+                return result.OrderByDescending(p=> p.OrderNumber).ToList();
             }
         }
     }
